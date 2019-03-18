@@ -22,11 +22,11 @@ The file follows the following format:
      Any command that requires arguments must have those arguments in the second line.
      The commands are as follows:
 
-         sphere: add a sphere to the edge matrix - 
+         sphere: add a sphere to the edge matrix -
                  takes 4 arguemnts (cx, cy, cz, r)
-         torus: add a torus to the edge matrix - 
+         torus: add a torus to the edge matrix -
                 takes 5 arguemnts (cx, cy, cz, r1, r2)
-         box: add a rectangular prism to the edge matrix - 
+         box: add a rectangular prism to the edge matrix -
               takes 6 arguemnts (x, y, z, width, height, depth)
          clear: clears the edge matrix
 
@@ -78,12 +78,12 @@ void parse_file ( char * filename,
   c.red = 255;
   c.green = 0;
   c.blue = 255;
-  
-  if ( strcmp(filename, "stdin") == 0 ) 
+
+  if ( strcmp(filename, "stdin") == 0 )
     f = stdin;
   else
     f = fopen(filename, "r");
-  
+
   while ( fgets(line, sizeof(line), f) != NULL ) {
     line[strlen(line)-1]='\0';
     //printf(":%s:\n",line);
@@ -97,7 +97,24 @@ void parse_file ( char * filename,
     char axis;
     int type;
     int step = 100;
-    if ( strncmp(line, "circle", strlen(line)) == 0 ) {
+
+    if (strncmp(line, "sphere", strlen(line)) == 0 ) {
+
+    }//end sphere
+
+    if (strncmp(line, "torus", strlen(line)) == 0 ) {
+
+    }//end torus
+
+    else if (strncmp(line, "box", strlen(line)) == 0 ) {
+
+    }//end box
+
+    else if (strncmp(line, "clear", strlen(line)) == 0 ) {
+
+    }//end clear
+
+    else if ( strncmp(line, "circle", strlen(line)) == 0 ) {
       fgets(line, sizeof(line), f);
       //printf("CIRCLE\t%s", line);
 
@@ -112,7 +129,7 @@ void parse_file ( char * filename,
         type = HERMITE;
       else
         type = BEZIER;
-      
+
       fgets(line, sizeof(line), f);
       //printf("CURVE\t%s", line);
 
@@ -124,7 +141,7 @@ void parse_file ( char * filename,
           /*       xvals[1], yvals[1], */
           /*       xvals[2], yvals[2], */
           /*       xvals[3], yvals[3]); */
-      
+
           //printf("%d\n", type);
           add_curve( edges, xvals[0], yvals[0], xvals[1], yvals[1],
                      xvals[2], yvals[2], xvals[3], yvals[3], step, type);
