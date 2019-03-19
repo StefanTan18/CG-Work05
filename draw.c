@@ -58,11 +58,11 @@ void add_box( struct matrix * edges,
 void add_sphere( struct matrix * edges, 
                  double cx, double cy, double cz,
                  double r, int step ) {
+  int c;
   struct matrix * points = generate_sphere(cx, cy, cz, r, step);
   
-  for (int col = 0; col < points->lastcol; col++) {
-    add_edge(edges, points->m[0][col], points->m[1][col], points->m[2][col],
-	     points->m[0][col], points->m[1][col], points->m[2][col]);
+  for (c = 0; c < points->lastcol; c++) {
+    add_edge(edges, points->m[0][c], points->m[1][c], points->m[2][c], points->m[0][c], points->m[1][c], points->m[2][c]);
   }
   free_matrix(points);
 }
@@ -116,11 +116,11 @@ struct matrix * generate_sphere(double cx, double cy, double cz,
 void add_torus( struct matrix * edges, 
                 double cx, double cy, double cz,
                 double r1, double r2, int step ) {
+  int c;
   struct matrix * points = generate_torus(cx, cy, cz, r1, r2, step);
   
-  for (int col = 0; col < points->lastcol; col++) {
-    add_edge(edges, points->m[0][col], points->m[1][col], points->m[2][col],
-	     points->m[0][col]+1, points->m[1][col]+1, points->m[2][col]+1);
+  for (c = 0; c < points->lastcol; c++) {
+    add_edge(edges, points->m[0][c], points->m[1][c], points->m[2][c], points->m[0][c]+1, points->m[1][c]+1, points->m[2][c]+1);
   }
   free_matrix(points);
 }
@@ -144,10 +144,10 @@ struct matrix * generate_torus( double cx, double cy, double cz,
   double phi, theta, x, y, z;
   struct matrix * points = new_matrix(4, 4);
   
-  for (i = 0; p < step; p++) {
-    phi = p * 2 * M_PI / step;
-    for (j = 0; t < step; t++) {
-      theta = t * 2 * M_PI / step;
+  for (i = 0; i < step; i++) {
+    phi = i * 2 * M_PI / step;
+    for (j = 0; j < step; j++) {
+      theta = j * 2 * M_PI / step;
       x = cos(phi) * (r1 * cos(theta) + r2) + cx;
       y = r1 * sin(theta) + cy;
       z = -sin(phi) * (r1 * cos(theta) + r2)  + cz;
