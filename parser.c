@@ -140,41 +140,41 @@ void parse_file ( char * filename,
 
       fgets(line, sizeof(line), f);
       //printf("CURVE\t%s", line);
+      
+      sscanf(line, "%lf %lf %lf %lf %lf %lf %lf %lf",
+	     xvals, yvals, xvals+1, yvals+1,
+	     xvals+2, yvals+2, xvals+3, yvals+3);
+      /* printf("%lf %lf %lf %lf %lf %lf %lf %lf\n", */
+      /*       xvals[0], yvals[0], */
+      /*       xvals[1], yvals[1], */
+      /*       xvals[2], yvals[2], */
+      /*       xvals[3], yvals[3]); */
 
-          sscanf(line, "%lf %lf %lf %lf %lf %lf %lf %lf",
-                 xvals, yvals, xvals+1, yvals+1,
-                 xvals+2, yvals+2, xvals+3, yvals+3);
-          /* printf("%lf %lf %lf %lf %lf %lf %lf %lf\n", */
-          /*       xvals[0], yvals[0], */
-          /*       xvals[1], yvals[1], */
-          /*       xvals[2], yvals[2], */
-          /*       xvals[3], yvals[3]); */
-
-          //printf("%d\n", type);
-          add_curve( edges, xvals[0], yvals[0], xvals[1], yvals[1],
-                     xvals[2], yvals[2], xvals[3], yvals[3], step, type);
-        }//end of curve
-        else if ( strncmp(line, "line", strlen(line)) == 0 ) {
-          fgets(line, sizeof(line), f);
-          //printf("LINE\t%s", line);
-
-          sscanf(line, "%lf %lf %lf %lf %lf %lf",
-                 xvals, yvals, zvals,
-                 xvals+1, yvals+1, zvals+1);
-          /*printf("%lf %lf %lf %lf %lf %lf",
-            xvals[0], yvals[0], zvals[0],
-            xvals[1], yvals[1], zvals[1]) */
-          add_edge(edges, xvals[0], yvals[0], zvals[0],
-                   xvals[1], yvals[1], zvals[1]);
-        }//end line
-
-        else if ( strncmp(line, "scale", strlen(line)) == 0 ) {
-          fgets(line, sizeof(line), f);
-          //printf("SCALE\t%s", line);
-          sscanf(line, "%lf %lf %lf",
-                 xvals, yvals, zvals);
-          /* printf("%lf %lf %lf\n", */
-          /* xvals[0], yvals[0], zvals[0]); */
+      //printf("%d\n", type);
+      add_curve( edges, xvals[0], yvals[0], xvals[1], yvals[1],
+		 xvals[2], yvals[2], xvals[3], yvals[3], step, type);
+    }//end of curve
+    else if ( strncmp(line, "line", strlen(line)) == 0 ) {
+      fgets(line, sizeof(line), f);
+      //printf("LINE\t%s", line);
+      
+      sscanf(line, "%lf %lf %lf %lf %lf %lf",
+	     xvals, yvals, zvals,
+	     xvals+1, yvals+1, zvals+1);
+      /*printf("%lf %lf %lf %lf %lf %lf",
+	xvals[0], yvals[0], zvals[0],
+	xvals[1], yvals[1], zvals[1]) */
+      add_edge(edges, xvals[0], yvals[0], zvals[0],
+	       xvals[1], yvals[1], zvals[1]);
+    }//end line
+    
+    else if ( strncmp(line, "scale", strlen(line)) == 0 ) {
+      fgets(line, sizeof(line), f);
+      //printf("SCALE\t%s", line);
+      sscanf(line, "%lf %lf %lf",
+	     xvals, yvals, zvals);
+      /* printf("%lf %lf %lf\n", */
+      /* xvals[0], yvals[0], zvals[0]); */
       tmp = make_scale( xvals[0], yvals[0], zvals[0]);
       matrix_mult(tmp, transform);
     }//end scale
@@ -189,7 +189,7 @@ void parse_file ( char * filename,
       tmp = make_translate( xvals[0], yvals[0], zvals[0]);
       matrix_mult(tmp, transform);
     }//end translate
-
+    
     else if ( strncmp(line, "rotate", strlen(line)) == 0 ) {
       fgets(line, sizeof(line), f);
       //printf("Rotate\t%s", line);
@@ -224,15 +224,18 @@ void parse_file ( char * filename,
       draw_lines(edges, s, c);
       display( s );
     }//end display
-
-    else if ( strncmp(line, "save", strlen(line)) == 0 ) {
-      //printf("SAVE\t%s", line);
-      fgets(line, sizeof(line), f);
-      *strchr(line, '\n') = 0;
-      //printf("name: %s\n", line);
+    
+    else if (!strcmp(line, "save")) {
+      char *filename;
+      
+      filename = malloc(100);
+      fgets(filename, 100, f);
+      filename[strlen(filename)]='\0';
+      
       clear_screen(s);
       draw_lines(edges, s, c);
-      save_extension(s, line);
-    }//end save
+      save_extension(s, filename);
+      free(filename);
+    }
   }
 }
